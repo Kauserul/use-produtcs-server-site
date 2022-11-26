@@ -15,13 +15,29 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run(){
     try{
-        const furnitureCollections = client.db('furnitureCollections').collection('homepagefurniture')
+        const furnitureCollections = client.db('furnitureCollections').collection('allfurniture')
+        const homeFurnitureCollection = client.db('furnitureCollections').collection('homepagefurniture')
+        const productsBooked = client.db('furnitureCollections').collection('booking')
 
         app.get('/furniture', async(req, res) =>{
             const query = {}
+            const result = await homeFurnitureCollection.find(query).toArray()
+            res.send(result)
+        })
+
+        app.get('/products/:category' , async(req, res) =>{
+            const category = req.params.category
+            console.log(category)
+            const query = {category_id : category}
             const result = await furnitureCollections.find(query).toArray()
             res.send(result)
         })
+
+        app.post('/booking', async(req, res) =>{
+            const product = req.body
+            console.log(product)
+        })
+
     }
     finally{
 
