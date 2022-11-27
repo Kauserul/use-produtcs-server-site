@@ -28,7 +28,7 @@ async function run(){
 
         app.get('/products/:category' , async(req, res) =>{
             const category = req.params.category
-            console.log(category)
+            // console.log(category)
             const query = {category_id : category}
             const result = await furnitureCollections.find(query).toArray()
             res.send(result)
@@ -44,6 +44,14 @@ async function run(){
             const user = req.body 
             const result = await allUserCollection.insertOne(user)
             res.send(result)
+        })
+
+        app.get('/user/admin/:email', async(req, res) =>{
+            const email = req.params.email 
+            console.log(email)
+            const query = {email}
+            const user = await allUserCollection.findOne(query)
+            res.send({isAdmin: user?.role === 'admin'})
         })
 
     }
