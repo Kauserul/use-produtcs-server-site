@@ -18,6 +18,7 @@ async function run(){
         const furnitureCollections = client.db('furnitureCollections').collection('allfurniture')
         const homeFurnitureCollection = client.db('furnitureCollections').collection('homepagefurniture')
         const productsBooked = client.db('furnitureCollections').collection('booking')
+        const allUserCollection = client.db('furnitureCollections').collection('user')
 
         app.get('/furniture', async(req, res) =>{
             const query = {}
@@ -35,7 +36,14 @@ async function run(){
 
         app.post('/booking', async(req, res) =>{
             const product = req.body
-            console.log(product)
+            const result = await productsBooked.insertOne(product)
+            res.send(result) 
+        })
+
+        app.post('/user', async(req, res) =>{
+            const user = req.body 
+            const result = await allUserCollection.insertOne(user)
+            res.send(result)
         })
 
     }
