@@ -8,7 +8,7 @@ app.use(cors())
 app.use(express.json())
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mcdvihz.mongodb.net/?retryWrites=true&w=majority`;
 // console.log(uri)
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
@@ -60,6 +60,26 @@ async function run(){
             const query = {email}
             const user = await allUserCollection.findOne(query)
             res.send({isSeller: user?.role === 'seller'})
+        })
+
+        app.get('/allseller', async(req, res) =>{
+            const query = {role : "seller"}
+            const seller = await allUserCollection.find(query).toArray()
+            res.send(seller)
+        })
+
+        app.get('/allbuyer', async(req, res) =>{
+            const query = {role : "buyer"}
+            const buyer = await allUserCollection.find(query).toArray()
+            res.send(buyer)
+        })
+
+        app.delete('/allseller/:id', async(req, res) =>{
+            const id = req.params.id 
+            // console.log(id)
+            const query = {_id: ObjectId(id)}
+            const result = await allUserCollection.deleteOne(query)
+            res.send(result)
         })
 
     }
