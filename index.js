@@ -29,7 +29,7 @@ async function run(){
         app.get('/products/:category' , async(req, res) =>{
             const category = req.params.category
             // console.log(category)
-            const query = {category_id : category}
+            const query = {category : category}
             const result = await furnitureCollections.find(query).toArray()
             res.send(result)
         })
@@ -62,6 +62,13 @@ async function run(){
             res.send({isSeller: user?.role === 'seller'})
         })
 
+        app.get('/user/buyer/:email', async(req, res) =>{
+            const email = req.params.email 
+            const query = {email}
+            const user = await allUserCollection.findOne(query)
+            res.send({isBuyer: user?.role === 'buyer'})
+        })
+
         app.get('/allseller', async(req, res) =>{
             const query = {role : "seller"}
             const seller = await allUserCollection.find(query).toArray()
@@ -79,6 +86,21 @@ async function run(){
             // console.log(id)
             const query = {_id: ObjectId(id)}
             const result = await allUserCollection.deleteOne(query)
+            res.send(result)
+        })
+
+        app.delete('/allbuyer/:id', async(req, res) =>{
+            const id = req.params.id 
+            const query = {_id : ObjectId(id)}
+            const result = await allUserCollection.deleteOne(query)
+            res.send(result)
+        })
+
+        app.get('/myorder', async(req, res) =>{
+            const email = req.query.email
+            console.log(email)
+            const query = {userEmail : email}
+            const result = await productsBooked.find(query).toArray()
             res.send(result)
         })
 
