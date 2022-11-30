@@ -20,6 +20,7 @@ async function run(){
         const productsBooked = client.db('furnitureCollections').collection('booking')
         const allUserCollection = client.db('furnitureCollections').collection('user')
         const productAdded = client.db('furnitureCollections').collection('addproduct')
+        const advertiseProduct = client.db('furnitureCollections').collection('advertise')
 
         app.get('/furniture', async(req, res) =>{
             const query = {}
@@ -124,7 +125,17 @@ async function run(){
             res.send(products)
         })
 
-        
+        app.post('/advertise', async(req, res) =>{
+            const product = req.body 
+            const result = await advertiseProduct.insertOne(product)
+            res.send(result)
+        })
+
+        app.get('/advertise', async(req, res) =>{
+            const query = {}
+            const result = await advertiseProduct.find(query).toArray()
+            res.send(result)
+        })
 
     }
     finally{
