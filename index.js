@@ -21,6 +21,7 @@ async function run(){
         const allUserCollection = client.db('furnitureCollections').collection('user')
         const productAdded = client.db('furnitureCollections').collection('addproduct')
         const advertiseProduct = client.db('furnitureCollections').collection('advertise')
+        const reportedProducts = client.db('furnitureCollections').collection('report')
 
         app.get('/furniture', async(req, res) =>{
             const query = {}
@@ -142,6 +143,25 @@ async function run(){
         app.get('/advertise', async(req, res) =>{
             const query = {}
             const result = await advertiseProduct.find(query).toArray()
+            res.send(result)
+        })
+
+        app.post('/reporteditems', async(req, res) =>{
+            const product = req.body 
+            const result = await reportedProducts.insertOne(product)
+            res.send(result)
+        })
+
+        app.get('/reporteditems', async(req,res) =>{
+            const query = {}
+            const result = await reportedProducts.find(query).toArray()
+            res.send(result)
+        })
+
+        app.delete('/reporteditems/:id', async(req,res) =>{
+            const id = req.params.id
+            const query = {_id : ObjectId(id)}
+            const result = await reportedProducts.deleteOne(query)
             res.send(result)
         })
 
